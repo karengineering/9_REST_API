@@ -56,9 +56,11 @@ class User extends Model {}
       type: DataTypes.STRING,
       allowNull: false,
       set(val) {
-        if (val === this.password) {
+        // if (val === this.password) {
+          if (val) {
           const hashedPassword = bcrypt.hashSync(val, 10);
-          this.setDataValue('confirmedPassword', hashedPassword);
+          // this.setDataValue('confirmedPassword', hashedPassword);
+          this.setDataValue('password', hashedPassword);
         }
       },
       validate: {
