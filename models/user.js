@@ -1,30 +1,72 @@
 'use strict';
-const Sequelize = require('sequelize');
+// const Sequelize = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 module.exports = (sequelize) => {
-  class User extends Sequelize.Model {}
+//  class User extends Sequelize.Model {}
+class User extends Model {}
  User.init({
-    // id: {
-    //   type: Sequelize.INTEGER,
-    //   primaryKey: true,
-    //   autoIncrement: true,
-    // },
+    id: {
+      // type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     firstName: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'First name is required'
+        },
+        notEmpty: {
+          msg: 'Please provide a first name'
+        }
+      }
     },
     lastName: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Last name is required'
+        },
+        notEmpty: {
+          msg: 'Please provide a last name'
+        }
+      }
     },
     emailAddress: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
+      unique: {
+        msg: 'The email you entered already exists',
+      },
+      validate: {
+        notNull: {
+          msg: 'an email is required'
+        },
+        isEmail: {
+          msg: 'Please provide a valid email address'
+        }
+      }
     },
     password: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
-    },
+      set(val) {
+        if (val === this.password) {
+          const hashedPassword = bcrypt.hashSync(val, 10);
+          this.setDataValue('confirmedPassword', hashedPassword);
+        }
+      },
+      validate: {
+        notNull: {
+          msg: 'A password is required'
+        }
+      }
+    }
   }, { sequelize });
 
  User.associate = (models) => {
@@ -34,7 +76,7 @@ module.exports = (sequelize) => {
       foreignKey: {
         fieldName: 'userId',
         allowNull: false,
-      },
+      }
     });
   };
 

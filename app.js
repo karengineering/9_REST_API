@@ -9,6 +9,7 @@ const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'tr
 
 //mycode
 //
+const routes = require('./routes');
 const { sequelize, models } = require('./models');
 // Get references to our models.
 // const { User, Course } = models;
@@ -35,6 +36,10 @@ const app = express();
 
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
+
+//
+app.use(express.json());
+app.use('/api', routes);
 
 // setup a friendly greeting for the root route
 app.get('/', (req, res) => {

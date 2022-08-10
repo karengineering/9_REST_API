@@ -1,29 +1,50 @@
 'use strict';
-const Sequelize = require('sequelize');
+// const Sequelize = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize) => {
-  class Course extends Sequelize.Model {}
+//   class Course extends Sequelize.Model {}
+  class Course extends Model {}
   Course.init({
-    // id: {
-    //   type: Sequelize.INTEGER,
-    //   primaryKey: true,
-    //   autoIncrement: true,
-    // },
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     title: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: Sequelize.TEXT,
-      allowNull: false,
-    },
-    estimatedTime: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: "A title is required"
+            },
+            notEmpty: {
+                msg: "Please provide a title"
+            }
+    }
+},
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notNull: {
+                msg: "A description is required"
+            },
+            notEmpty: {
+                msg: "Please provide a description"
+            }
+    }
+},
+    estimatedTime: {
+        type: DataTypes.STRING
+        // type: Sequelize.STRING,
+        // allowNull: false,
       },
     materialsNeeded: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: DataTypes.STRING
+        // type: Sequelize.STRING,
+        // allowNull: false,
     },
       
   }, { sequelize });
